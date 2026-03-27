@@ -1,0 +1,15 @@
+{
+  "originHash" : "b9ff5fd93160f3d28b2900f03c3c5fb7d03ec001239f931cca4ce06308249259",
+  "pins" : [
+    {
+      "identity" : "ios-player",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/FastPix/iOS-player.git",
+      "state" : {
+        "revision" : "c162f9c26c624dfa0133fdc1cddd5aafae4e28b2",
+        "version" : "0.9.0"
+      }
+    }
+  ],
+  "version" : 3
+}
