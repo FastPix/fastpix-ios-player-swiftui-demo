@@ -177,4 +177,4 @@ App Layer Handles
 
 ## For Detailed documentation check below 
 
-[Click here](https://docs.fastpix.io/docs/ios-player) for a detailed documentation on FastPix Player SDK for iOS.
+[Click here](https://docs.fastpix.com/docs/ios-player) for a detailed documentation on FastPix Player SDK for iOS.
