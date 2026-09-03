@@ -27,39 +27,170 @@ The FastPix iOS Player SDK is already integrated via Swift Package Manager, and 
 
 <br />
 
-## Prerequisites
+## Start here
 
-Before you start, make sure you have:
+If you are setting up this demo for the first time, follow these steps in order:
 
-- A **Mac with Xcode 16.2 or later** (the project was created with Xcode 16.2).
-- An **iOS 18.2+ simulator or device** - the project's deployment target is iOS 18.2. To run on an older OS, lower `IPHONEOS_DEPLOYMENT_TARGET` in the project settings (verify your SDK version supports it).
-- A **FastPix account** only if you want to play your own videos. The bundled sample videos need no account or credentials.
+1. [Check your macOS version](#1-check-your-macos-version)
+2. [Check that Xcode is installed](#2-check-that-xcode-is-installed)
+3. [Check for a compatible simulator](#3-check-for-a-compatible-simulator)
+4. [Clone the repository](#4-clone-the-repository)
+5. [Resolve the Swift package dependency](#5-resolve-the-swift-package-dependency)
+6. [Build and run the app](#6-build-and-run-the-app)
+7. [Play a video and verify it works](#7-play-a-video-and-verify-it-works)
+
+Do not skip the verification commands. If a step's check fails, fix that problem before you continue.
+
+Unlike some FastPix demos, this app needs **no credentials and no code changes**: the SDK is already integrated via Swift Package Manager and two public sample videos are bundled, so it plays out of the box on a simulator.
 
 <br />
 
-## Run the demo
+## Before you begin
 
-The FastPix iOS Player SDK is already added via Swift Package Manager and the app includes two public sample videos, so no credentials or code changes are needed.
+Make sure you have the following ready:
 
-Clone the repository:
+| Requirement | Details |
+|---|---|
+| **A Mac with Xcode 16.2 or later** | Install the full Xcode app from the App Store. It provides the build tools, the Swift compiler, Git, and the iOS 18.2+ SDK. The project was created with Xcode 16.2. |
+| **An iOS 18.2+ simulator or device** | The project's deployment target is iOS 18.2, so you need a simulator or device running iOS 18.2 or later. |
+| **A FastPix account** *(optional)* | Needed only if you want to play your own videos. The bundled sample videos require no account or credentials. |
+
+> **Supported iOS versions:** The project targets **iOS 18.2**. Use an iOS 18.2+ simulator or device. To run on an older OS, lower `IPHONEOS_DEPLOYMENT_TARGET` in the project's **Build Settings** (verify your SDK version supports it), or see [Build fails on an older iOS version](#build-fails-on-an-older-ios-version).
+
+<br />
+
+## 1. Check your macOS version
+
+The build tools run on macOS. Confirm your version:
+
+```bash
+sw_vers
+```
+
+Output is similar to:
+
+```text
+ProductName:		macOS
+ProductVersion:		26.6.2
+BuildVersion:		25G83
+```
+
+Use a macOS version that supports Xcode 16.2 or later. If macOS is too old, update it before you continue.
+
+<br />
+
+## 2. Check that Xcode is installed
+
+This project builds with the full Xcode app. Confirm the command line points at Xcode:
+
+```bash
+xcodebuild -version
+```
+
+Expected output is similar to:
+
+```text
+Xcode 26.6
+Build version 17F113
+```
+
+If instead you see `xcode-select: error: tool 'xcodebuild' requires Xcode, but active developer directory '/Library/Developer/CommandLineTools' is a command line tools instance`, point the command line at Xcode (this needs your password):
+
+```bash
+sudo xcode-select --switch /Applications/Xcode.app
+sudo xcodebuild -license accept
+```
+
+Then run `xcodebuild -version` again. Do not continue until it prints a version.
+
+<br />
+
+## 3. Check for a compatible simulator
+
+The project's deployment target is iOS 18.2, so you need a simulator (or device) running iOS 18.2 or later. List the simulators installed on your Mac:
+
+```bash
+xcrun simctl list devices available
+```
+
+Output is similar to:
+
+```text
+-- iOS 26.5 --
+    iPhone 17 (...) (Shutdown)
+    iPhone 17 Pro (...) (Shutdown)
+```
+
+Note a device name that appears under an `-- iOS 18.2 --` (or later) heading. You use it in [Build and run the app](#6-build-and-run-the-app). If no iOS 18.2+ runtime is listed, install one in Xcode from **Xcode > Settings > Components**, then run the command again.
+
+<br />
+
+## 4. Clone the repository
 
 ```bash
 git clone "https://github.com/FastPix/fastpix-ios-player-swiftui-demo.git"
 cd fastpix-ios-player-swiftui-demo
 ```
 
-Then:
+<br />
 
-1. Open `PlayerSwiftUI.xcodeproj` in Xcode.
-2. Let Xcode resolve the Swift Package dependency (`FastPixPlayerSDK` from `iOS-player`).
-3. Select a simulator or a connected device (iOS 18.2+) and press **Run** (`⌘R`).
-4. Tap **Play Videos** on the home screen to open the player.
+## 5. Resolve the Swift package dependency
+
+The FastPix iOS Player SDK is already added via Swift Package Manager. Xcode resolves it automatically when you open the project, but you can resolve and verify it from the command line:
+
+```bash
+xcodebuild -project PlayerSwiftUI.xcodeproj -resolvePackageDependencies
+```
+
+The output confirms the pinned SDK version:
+
+```text
+Resolved source packages:
+  FastPixPlayerSDK: https://github.com/FastPix/iOS-player.git @ 0.9.0
+```
+
+If resolution fails, see [Swift Package fails to resolve](#swift-package-fails-to-resolve).
 
 <br />
 
-## Verify it works
+## 6. Build and run the app
 
-On launch you land on a home screen with a **Play Videos** card. Tapping it opens the player and begins playing the first bundled sample video. You can scrub the timeline, switch audio and subtitle tracks, see subtitle text rendered over the video, and move through the two-item playlist. If playback does not start, see [Troubleshooting](#troubleshooting).
+#### Option A: Using Xcode
+
+1. Open `PlayerSwiftUI.xcodeproj` in Xcode.
+2. Let Xcode finish resolving the Swift package dependency (`FastPixPlayerSDK` from `iOS-player`).
+3. Select an iOS 18.2+ simulator or connected device as the run destination, then press **Run** (`⌘R`).
+
+#### Option B: Using the command line
+
+Replace `iPhone 17` with the device name you noted in [Check for a compatible simulator](#3-check-for-a-compatible-simulator).
+
+```bash
+xcodebuild -project PlayerSwiftUI.xcodeproj \
+           -scheme PlayerSwiftUI \
+           -destination "platform=iOS Simulator,name=iPhone 17" \
+           build
+```
+
+A successful build ends with:
+
+```text
+** BUILD SUCCEEDED **
+```
+
+<br />
+
+## 7. Play a video and verify it works
+
+On launch you land on a home screen with a **FastPix Player** card labeled **Play Videos**. Tap it to open the player and begin playing the first bundled sample video. You can scrub the timeline, switch audio and subtitle tracks, see subtitle text rendered over the video, and move through the two-item playlist.
+
+A working app confirms that:
+
+- Xcode and the iOS 18.2+ SDK are installed.
+- The `FastPixPlayerSDK` package resolved at version 0.9.0.
+- The app builds, launches, and plays HLS video through the FastPix iOS Player SDK.
+
+If playback does not start, see [Troubleshooting](#troubleshooting).
 
 <br />
 
@@ -217,7 +348,7 @@ Replace the sample playback IDs in the playlist in `FastPixSwiftUIPlayer.swift` 
 The SDK emits subtitle cues via a delegate callback, and the app draws them in the SwiftUI layer. See [Render subtitles in SwiftUI](#render-subtitles-in-swiftui).
 
 **Which iOS version is required?**
-The project targets iOS 18.2 and was built with Xcode 16.2. See [Prerequisites](#prerequisites).
+The project targets iOS 18.2 and was built with Xcode 16.2. See [Before you begin](#before-you-begin).
 
 **How do I add the FastPix player to my own app?**
 Follow the [install guide](https://fastpix.com/docs/ios-player/install-fastpix-ios-player) and use the [iOS-player](https://github.com/FastPix/iOS-player) SDK. See [How the integration works](#how-the-integration-works).
